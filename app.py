@@ -12,28 +12,41 @@ app = Flask(__name__)
 
 # ------------------- ১. গুগল শীটস কানেক্ট করা -------------------
 def get_sheet_data():
-    """গুগল শীট থেকে সব ডেটা পড়ে টেক্সট আকারে রিটার্ন করে"""
+    """দুটি গুগল শীট থেকে সব ডেটা পড়ে টেক্সট আকারে রিটার্ন করে"""
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     
     # credentials.json ফাইলটি অবশ্যই এই ফোল্ডারে থাকতে হবে
     creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
     client = gspread.authorize(creds)
 
-    # 📌 এখানে আপনার শীটের নাম দিন (যেমন: "Mess Bill" বা শীটের URL)
-    sheet = client.open("আপনার_শীটের_নাম_এখানে").sheet1
-    data = sheet.get_all_values()
-    
-    # ডেটাকে লাইন বাই লাইন টেক্সটে কনভার্ট করা
-    text_data = ""
-    for row in data:
+    # 📌 আপনার শীটের নাম (একদম যেভাবে ড্রাইভে আছে সেভাবে)
+    try:
+        sheet1 = client.open("মিলের হিসাব").sheet1
+        sheet2 = client.open("বাসা ভাড়া").sheet1
+    except gspread.exceptions.SpreadsheetNotFound:
+        # নাম দিয়ে না পেলে শীটের ID ব্যবহার করুন (নিচের লাইন দুটি আনকমেন্ট করুন)
+        # sheet1 = client.open_by_key("1vUo7IGmVJXB0-FcduSVk7_fHGSUxZfk0c3Q-nOIco0U").sheet1
+        # sheet2 = client.open_by_key("1YFnyNrBJTnXIIb0tYh6uAsXRHNzboRMdQotUuUZO_gQ").sheet1
+        raise Exception("শীট খুঁজে পাওয়া যায়নি! নাম বা ID চেক করুন।")
+
+    data1 = sheet1.get_all_values()
+    data2 = sheet2.get_all_values()
+
+    text_data = "📊 শীট ১ (মিলের হিসাব):\n"
+    for row in data1:
         text_data += ", ".join(row) + "\n"
+
+    text_data += "\n📊 শীট ২ (বাসা ভাড়া ও বিল):\n"
+    for row in data2:
+        text_data += ", ".join(row) + "\n"
+
     return text_data
 
 # ------------------- ২. জেমিনি এআই সেটআপ -------------------
 # Render-এ Environment Variable হিসেবে GEMINI_API_KEY সেট করুন
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY Environment Variable সেট করা হয়নি!")
+    raise ValueError("GEMINI_API_KEY Environment Variable সেট করা হয়নি! Google AI Studio থেকে Key নিয়ে Set করুন।")
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')  # অথবা 'gemini-1.5-flash'
@@ -55,6 +68,7 @@ def get_ai_response(user_question):
 ১. শুধু ডেটার ভিত্তিতে উত্তর দাও।
 ২. ডেটাতে উত্তর না থাকলে স্পষ্টভাবে বলে দাও।
 ৩. বাংলায় উত্তর দাও।
+৪. প্রয়োজনে যোগ-বিয়োগ ও বিশ্লেষণ করো।
 """
     response = model.generate_content(prompt)
     return response.text
