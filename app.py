@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # ===============================================
-# 🔐 Google Sheets সংযোগ (Environment Variable থেকে)
+# 🔐 Google Sheets সংযোগ
 # ===============================================
 def get_credentials():
     creds_json = os.getenv("GOOGLE_CREDENTIALS")
@@ -30,13 +30,13 @@ def get_sheet_data():
     text_data = "📊 শীট ১ (মিলের হিসাব):\n"
     for row in data1:
         text_data += ", ".join(row) + "\n"
-    text_data += "\n📊 শীট ২ (বাসা ভাড়া ও বিল):\n"
+    text_data += "\n📊 শীট ২ (বাসা ভাড়া ও অন্যান্য খরচ):\n"
     for row in data2:
         text_data += ", ".join(row) + "\n"
     return text_data
 
 # ===============================================
-# 🧠 Groq AI সেটআপ (Environment Variable থেকে)
+# 🧠 Groq AI সেটআপ
 # ===============================================
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
@@ -47,37 +47,48 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+# ===============================================
+# 💬 স্মার্ট প্রম্পট (ChatGPT-স্টাইল)
+# ===============================================
 def get_ai_response(user_question):
     sheet_data = get_sheet_data()
-    prompt = f"""
-তুমি একজন ডেটা অ্যানালিস্ট। নিচের ডেটা বিশ্লেষণ করে প্রশ্নের উত্তর দাও।
-
-ডেটা:
-{sheet_data}
-
-প্রশ্ন: {user_question}
+    
+    system_prompt = """
+তুমি একজন বুদ্ধিমান ও বন্ধুসুলভ AI সহায়ক। তোমার নাম 'মেসবট'।
+তোমার কাজ হলো ব্যবহারকারীর সাথে স্বাভাবিক কথোপকথন করা এবং প্রয়োজনে তাদের Google Sheets-এর ডেটা বিশ্লেষণ করে উত্তর দেওয়া।
 
 নির্দেশনা:
-১. শুধু ডেটার ভিত্তিতে উত্তর দাও।
-২. ডেটাতে উত্তর না থাকলে স্পষ্টভাবে বলে দাও।
-৩. বাংলায় উত্তর দাও।
-৪. প্রয়োজনে যোগ-বিয়োগ ও বিশ্লেষণ করো।
+১. প্রথমে ব্যবহারকারীকে অভিবাদন জানাও এবং তার নাম জিজ্ঞেস করো (যদি না সে আগেই বলে থাকে)।
+২. যদি ব্যবহারকারী তার নাম বলে, তবে পরবর্তী সব কথোপকথনে তাকে সেই নাম ধরে সম্বোধন করো।
+৩. সাধারণ কথোপকথনের জন্য (যেমন: হাই, হ্যালো, সালাম, কেমন আছো, কী খবর, ইত্যাদি) ডেটা বিশ্লেষণ করো না, বরং বন্ধুসুলভ ও উষ্ণ উত্তর দাও।
+৪. যদি ব্যবহারকারী ডেটা সম্পর্কিত কোনো প্রশ্ন করে (যেমন: জমা, খরচ, বিল, কার কত টাকা বাকি, ইত্যাদি), তাহলে নিচের ডেটা ভালোভাবে বিশ্লেষণ করে সঠিক উত্তর দাও।
+৫. বিদায়ী শব্দ (যেমন: bye, goodbye, বিদায়, আল্লাহ হাফেজ, ইত্যাদি) শুনলে উপযুক্ত বিদায়ী উত্তর দাও।
+৬. কোনো রোমান্টিক বা ফ্লার্ট করা যাবে না। শুধু পেশাদার ও বন্ধুসুলভ আচরণ করো।
 """
+    
+    user_prompt = f"""
+নিচে ডেটা দেওয়া হলো:
+{sheet_data}
+
+ব্যবহারকারীর প্রশ্ন: {user_question}
+"""
+    
     try:
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",  # অথবা "llama-3.3-70b-versatile"
+            model="llama-3.1-8b-instant",
             messages=[
-                {"role": "system", "content": "তুমি একজন ডেটা অ্যানালিস্ট।"},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
             ],
             temperature=0.7,
+            max_tokens=1024,
         )
         return completion.choices[0].message.content
     except Exception as e:
         return f"Groq API ত্রুটি: {str(e)}"
 
 # ===============================================
-# 🌐 ওয়েব রুট (পেজ ও এপিআই)
+# 🌐 ওয়েব রুট
 # ===============================================
 @app.route('/')
 def index():
