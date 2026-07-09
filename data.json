@@ -1,0 +1,49 @@
+{
+  "summary": {
+    "total_deposit": 7500,
+    "total_expense": 4970,
+    "total_loan": 890,
+    "current_balance": 1640
+  },
+  "deposits": [
+    {"date": "৩০ জুন", "name": "সাইফ", "amount": 500},
+    {"date": "৩০ জুন", "name": "সামিউল", "amount": 1000},
+    {"date": "১ জুলাই", "name": "আকাশ", "amount": 500},
+    {"date": "১ জুলাই", "name": "প্রান্ত", "amount": 500},
+    {"date": "১ জুলাই", "name": "সাম্য", "amount": 1000},
+    {"date": "১ জুলাই", "name": "লালন", "amount": 1000},
+    {"date": "১ জুলাই", "name": "তামিম", "amount": 1000},
+    {"date": "১ জুলাই", "name": "মেহেদী", "amount": 1000},
+    {"date": "৪ জুলাই", "name": "মেহেদী", "amount": 1000}
+  ],
+  "expenses": [
+    {"date": "৩০ জুন", "description": "চাল কেনা", "amount": 120, "paid_by": "তামিম ও লালন"},
+    {"date": "১ জুলাই", "description": "বাজার করা", "amount": 4790, "paid_by": "প্রান্ত ও আকাশ"},
+    {"date": "৫ জুলাই", "description": "কাঁচা ও শুকনো মরিচ", "amount": 60, "paid_by": "তামিম"}
+  ],
+  "loans": [
+    {"name": "তামিম", "amount": 240, "note": "৯০ টাকা পূর্বে এবং বল কেনার জন্য ১৫০ টাকা"},
+    {"name": "লালন", "amount": 150, "note": "বল কেনার জন্য"},
+    {"name": "সাম্য", "amount": 150, "note": "বল কেনার জন্য"},
+    {"name": "প্রান্ত", "amount": 150, "note": "বল কেনার জন্য"},
+    {"name": "সামিউল", "amount": 200, "note": "বল পূর্বের লোন এবং পরবর্তীতে আরও ১০০ টাকা"}
+  ],
+  "dashboard": [
+    {"name": "আকাশ", "house_rent": 2300, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 3923.75, "paid": 0, "status": "বাকি"},
+    {"name": "প্রান্ত", "house_rent": 2300, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 3923.75, "paid": 0, "status": "বাকি"},
+    {"name": "তামীম", "house_rent": 2450, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4073.75, "paid": 0, "status": "বাকি"},
+    {"name": "সামিউল", "house_rent": 2450, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4073.75, "paid": 0, "status": "বাকি"},
+    {"name": "মেহেদী", "house_rent": 2625, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4248.75, "paid": 3805, "status": "বাকি ৪৪৩.৭৫"},
+    {"name": "সাইফ", "house_rent": 2625, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4248.75, "paid": 6000, "status": "অগ্রিম ১৭৫১.২৫"},
+    {"name": "লালন", "house_rent": 2625, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4248.75, "paid": 0, "status": "বাকি"},
+    {"name": "সাম্য", "house_rent": 2625, "khala": 650, "wifi": 80, "gas": 450, "current": 131.25, "service": 312.5, "total_due": 4248.75, "paid": 0, "status": "বাকি"}
+  ],
+  "bills_summary": {
+    "total_current_bill": 1050,
+    "total_service_charge": 2500,
+    "gas_bill_per_member": 450,
+    "khala_bill_per_member": 650,
+    "wifi_bill_per_member": 80
+  },
+  "members": ["আকাশ", "প্রান্ত", "সামিউল", "তামীম", "মেহেদী", "সাইফ", "লালন", "সাম্য"]
+}
