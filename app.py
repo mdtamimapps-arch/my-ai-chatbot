@@ -1,40 +1,47 @@
 import os
+import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import google.generativeai as genai
 from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 
-# .env ফাইল থেকে API Key লোড করা (নিরাপত্তার জন্য)
+# .env ফাইল থেকে লোড (যদি লোকালে ব্যবহার করেন)
 load_dotenv()
 
 app = Flask(__name__)
 
-# =====================================================
-# 🔴 গুরুত্বপূর্ণ: Google Sheet-এ Editor পারমিশন দিন!
-# =====================================================
-# ১. "মিলের হিসাব" শীটে my-sheets-bot-387@... ইমেইলটিকে Editor দিন।
-# ২. "বাসা ভাড়া" শীটেও একই ইমেইলকে Editor দিন।
-# Viewer পারমিশন দিলে ডেটা পড়া যাবে না! ❌
-# =====================================================
+# ===============================================
+# 🔐 Google Sheets সংযোগ (Environment Variable থেকে)
+# ===============================================
+def get_credentials():
+    """GOOGLE_CREDENTIALS এনভায়রনমেন্ট ভেরিয়েবল থেকে JSON লোড করে Credentials তৈরি করে"""
+    creds_json = os.getenv("GOOGLE_CREDENTIALS")
+    if not creds_json:
+        raise ValueError("GOOGLE_CREDENTIALS Environment Variable সেট করা হয়নি!")
+    try:
+        creds_dict = json.loads(creds_json)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"GOOGLE_CREDENTIALS JSON ডিকোড করতে ব্যর্থ: {e}")
+    
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    return ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
-# ------------------- ১. গুগল শীটস কানেক্ট করা -------------------
 def get_sheet_data():
     """দুটি গুগল শীট থেকে সব ডেটা পড়ে টেক্সট আকারে রিটার্ন করে"""
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    
-    # credentials.json ফাইলটি অবশ্যই এই ফোল্ডারে থাকতে হবে
-    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    creds = get_credentials()
     client = gspread.authorize(creds)
 
-    # 📌 আপনার শীটের নাম (একদম যেভাবে ড্রাইভে আছে সেভাবে)
+    # আপনার শীটের নাম (ড্রাইভে যেভাবে আছে)
     try:
         sheet1 = client.open("মিলের হিসাব").sheet1
         sheet2 = client.open("বাসা ভাড়া").sheet1
     except gspread.exceptions.SpreadsheetNotFound:
-        # নাম দিয়ে না পেলে শীটের ID ব্যবহার করুন (নিচের লাইন দুটি আনকমেন্ট করুন)
-        # sheet1 = client.open_by_key("1vUo7IGmVJXB0-FcduSVk7_fHGSUxZfk0c3Q-nOIco0U").sheet1
-        # sheet2 = client.open_by_key("1YFnyNrBJTnXIIb0tYh6uAsXRHNzboRMdQotUuUZO_gQ").sheet1
+        # নাম দিয়ে না পেলে ID ব্যবহার করুন (নিচে আনকমেন্ট করুন)
+        # SHEET1_ID = "1vUo7IGmVJXB0-FcduSVk7_fHGSUxZfk0c3Q-nOIco0U"
+        # SHEET2_ID = "1YFnyNrBJTnXIIb0tYh6uAsXRHNzboRMdQotUuUZO_gQ"
+        # sheet1 = client.open_by_key(SHEET1_ID).sheet1
+        # sheet2 = client.open_by_key(SHEET2_ID).sheet1
         raise Exception("শীট খুঁজে পাওয়া যায়নি! নাম বা ID চেক করুন।")
 
     data1 = sheet1.get_all_values()
@@ -50,8 +57,9 @@ def get_sheet_data():
 
     return text_data
 
-# ------------------- ২. জেমিনি এআই সেটআপ -------------------
-# Render-এ Environment Variable হিসেবে GEMINI_API_KEY সেট করুন
+# ===============================================
+# 🧠 Gemini AI সেটআপ (এনভায়রনমেন্ট ভেরিয়েবল থেকে)
+# ===============================================
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY Environment Variable সেট করা হয়নি! Google AI Studio থেকে Key নিয়ে Set করুন।")
@@ -59,11 +67,9 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')  # অথবা 'gemini-1.5-flash'
 
-# ------------------- ৩. এআই রেসপন্স ফাংশন -------------------
 def get_ai_response(user_question):
     """শীটের ডেটা পড়ে জেমিনিকে প্রশ্ন পাঠায় ও উত্তর নিয়ে আসে"""
     sheet_data = get_sheet_data()
-    
     prompt = f"""
 তুমি একজন ডেটা অ্যানালিস্ট। নিচের ডেটা বিশ্লেষণ করে প্রশ্নের উত্তর দাও।
 
@@ -81,27 +87,27 @@ def get_ai_response(user_question):
     response = model.generate_content(prompt)
     return response.text
 
-# ------------------- ৪. ওয়েব রুট (পেজ ও এপিআই) -------------------
+# ===============================================
+# 🌐 ওয়েব রুট (পেজ ও এপিআই)
+# ===============================================
 @app.route('/')
 def index():
-    """হোম পেজ দেখায়"""
     return render_template('index.html')
 
 @app.route('/ask', methods=['POST'])
 def ask():
-    """ইউজারের প্রশ্ন নিয়ে উত্তর ফেরত দেয়"""
     data = request.get_json()
     user_question = data.get('question', '')
-    
     if not user_question:
         return jsonify({'error': 'কোনো প্রশ্ন পাওয়া যায়নি'}), 400
-    
     try:
         answer = get_ai_response(user_question)
         return jsonify({'answer': answer})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# ------------------- ৫. অ্যাপ চালু করা -------------------
+# ===============================================
+# 🚀 অ্যাপ চালু করা
+# ===============================================
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
