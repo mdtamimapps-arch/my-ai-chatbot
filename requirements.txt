@@ -1,6 +1,7 @@
 Flask
-google-generativeai
 gspread
 oauth2client
+google-generativeai
+openai
 python-dotenv
 gunicorn
