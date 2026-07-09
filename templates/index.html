@@ -15,29 +15,45 @@
         <div class="chat-box" id="chat-box">
             <div class="message bot-message" id="default-message">
                 👋 আসসালামু আলাইকুম! আমি আপনার মেস ও বিলের হিসাব রাখার জন্য এখানে আছি।<br>
-                আপনি সরাসরি প্রশ্ন টাইপ করতে পারেন, অথবা নিচের বাটনগুলোর সাহায্যে জানতে পারেন।
+                আপনি সরাসরি প্রশ্ন করতে পারেন, অথবা নিচের প্রস্তাবিত প্রশ্নগুলোর কোনো একটি ক্লিক করতে পারেন।
             </div>
         </div>
-        <!-- সাজেস্টেড প্রশ্ন -->
+        <!-- 📌 সাজেস্টেড প্রশ্ন (সাজেশন) -->
         <div class="suggestions" id="suggestions">
+            <!-- 💰 জমা ও খরচ -->
             <button class="suggestion-btn" data-question="মোট জমা কত?">💰 মোট জমা</button>
             <button class="suggestion-btn" data-question="মোট খরচ কত?">🛒 মোট খরচ</button>
             <button class="suggestion-btn" data-question="মেস ফান্ডে কত আছে?">🏦 ফান্ড ব্যালেন্স</button>
+            
+            <!-- 👤 ব্যক্তিগত -->
+            <button class="suggestion-btn" data-question="আমার বিল কত?">🧾 আমার বিল</button>
             <button class="suggestion-btn" data-question="আমার কত টাকা বাকি?">🧾 আমার বাকি</button>
             <button class="suggestion-btn" data-question="আমার Status কী?">📊 আমার Status</button>
-            <button class="suggestion-btn" data-question="কার সবচেয়ে বেশি বাকি?">🔥 সবচেয়ে বেশি বাকি</button>
-            <button class="suggestion-btn" data-question="কার সবচেয়ে বেশি Advance?">🔥 সবচেয়ে বেশি অগ্রিম</button>
+            <button class="suggestion-btn" data-question="আমার নামে কোনো লোন আছে?">💰 আমার লোন</button>
+            
+            <!-- 📋 লিস্ট -->
             <button class="suggestion-btn" data-question="Payment History দেখাও।">📜 পেমেন্ট হিস্টোরি</button>
             <button class="suggestion-btn" data-question="Expense History দেখাও।">📜 খরচের হিস্টোরি</button>
             <button class="suggestion-btn" data-question="Loan List দেখাও।">📋 লোনের তালিকা</button>
+            
+            <!-- 🔥 টপ -->
+            <button class="suggestion-btn" data-question="কার সবচেয়ে বেশি বাকি?">🔥 সবচেয়ে বেশি বাকি</button>
+            <button class="suggestion-btn" data-question="কার সবচেয়ে বেশি Advance?">🔥 সবচেয়ে বেশি অগ্রিম</button>
+            
+            <!-- 📅 ফিল্টার -->
             <button class="suggestion-btn" data-question="১ জুলাই কে কে টাকা দিয়েছে?">📅 ১ জুলাই পেমেন্ট</button>
             <button class="suggestion-btn" data-question="৩০ জুন কী খরচ হয়েছে?">📅 ৩০ জুন খরচ</button>
+            
+            <!-- 🏡 বিল -->
             <button class="suggestion-btn" data-question="কারেন্ট বিল কত?">⚡ কারেন্ট বিল</button>
             <button class="suggestion-btn" data-question="সার্ভিস চার্জ কত?">🔧 সার্ভিস চার্জ</button>
             <button class="suggestion-btn" data-question="গ্যাস বিল কত?">🔥 গ্যাস বিল</button>
             <button class="suggestion-btn" data-question="বাসা ভাড়া কত?">🏡 বাসা ভাড়া</button>
-            <button class="suggestion-btn" data-question="আমার নামে কোনো লোন আছে?">💰 আমার লোন</button>
-            <button class="suggestion-btn" data-question="মোট লোন কত?">📊 মোট লোন</button>
+            
+            <!-- 👤 Member Specific -->
+            <button class="suggestion-btn" data-question="আকাশের বিল কত?">🧾 আকাশের বিল</button>
+            <button class="suggestion-btn" data-question="সাইফের বিল কত?">🧾 সাইফের বিল</button>
+            <button class="suggestion-btn" data-question="তামিমের বাসা ভাড়া কত?">🏡 তামিমের বাসা ভাড়া</button>
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="এখানে প্রশ্ন লিখুন...">
