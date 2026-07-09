@@ -2,8 +2,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+    const suggestions = document.querySelectorAll('.suggestion-btn');
+
+    // ডিফল্ট মেসেজ (শুধু প্রথমবার দেখাবে)
+    let isFirstMessage = true;
 
     function addMessage(text, isUser) {
+        // প্রথম মেসেজ (ডিফল্ট) সরিয়ে ফেলুন
+        if (isFirstMessage && !isUser) {
+            const defaultMsg = document.getElementById('default-message');
+            if (defaultMsg) defaultMsg.remove();
+            isFirstMessage = false;
+        }
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
         messageDiv.textContent = text;
@@ -25,9 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typing) typing.remove();
     }
 
-    async function sendQuestion() {
-        const question = userInput.value.trim();
-        if (!question) return;
+    async function sendQuestion(question) {
+        if (!question.trim()) return;
+
+        // ডিফল্ট মেসেজ সরান
+        if (isFirstMessage) {
+            const defaultMsg = document.getElementById('default-message');
+            if (defaultMsg) defaultMsg.remove();
+            isFirstMessage = false;
+        }
 
         addMessage(question, true);
         userInput.value = '';
@@ -59,9 +75,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    sendBtn.addEventListener('click', sendQuestion);
+    // 🟢 সাজেশন বাটনে ক্লিক করলে
+    suggestions.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const question = this.getAttribute('data-question');
+            sendQuestion(question);
+        });
+    });
+
+    // 🟢 পাঠান বাটন
+    sendBtn.addEventListener('click', function() {
+        const question = userInput.value.trim();
+        if (!question) return;
+        sendQuestion(question);
+    });
+
+    // 🟢 Enter কী
     userInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') sendQuestion();
+        if (e.key === 'Enter') {
+            const question = userInput.value.trim();
+            if (!question) return;
+            sendQuestion(question);
+        }
     });
 
     userInput.focus();
