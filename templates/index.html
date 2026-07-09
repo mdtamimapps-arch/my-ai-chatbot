@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI চ্যাটবট</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>🤖 আমার AI চ্যাটবট</h2>
+            <p>গুগল শীটের ডেটা বিশ্লেষণ করে উত্তর দেয়</p>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                👋 হ্যালো! আপনার শীটের ডেটা সম্পর্কে যেকোনো প্রশ্ন করতে পারেন।
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="এখানে প্রশ্ন লিখুন...">
+            <button id="send-btn">পাঠান</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
