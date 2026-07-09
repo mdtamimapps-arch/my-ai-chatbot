@@ -13,9 +13,18 @@
             <p>গুগল শীটের ডেটা বিশ্লেষণ করে উত্তর দেয়</p>
         </div>
         <div class="chat-box" id="chat-box">
-            <div class="message bot-message">
-                👋 হ্যালো! আপনার শীটের ডেটা সম্পর্কে যেকোনো প্রশ্ন করতে পারেন।
+            <!-- ডিফল্ট মেসেজ (ব্যাকএন্ড থেকে আসে) -->
+            <div class="message bot-message" id="default-message">
+                👋 আসসালামু আলাইকুম! আমি আপনার মেস ও বিলের হিসাব রাখার জন্য এখানে আছি।<br>
+                আপনি সরাসরি আপনার প্রশ্ন টাইপ করতে পারেন, অথবা নিচের প্রস্তাবিত প্রশ্নগুলোর কোনো একটি ক্লিক করতে পারেন।
             </div>
+        </div>
+        <!-- 📌 সাজেস্টেড প্রশ্ন (সাজেশন) -->
+        <div class="suggestions" id="suggestions">
+            <button class="suggestion-btn" data-question="মোট জমা কত?">💰 মোট জমা কত?</button>
+            <button class="suggestion-btn" data-question="সাইফের বিল কত?">🧾 সাইফের বিল কত?</button>
+            <button class="suggestion-btn" data-question="কার সবচেয়ে বেশি বাকি?">📊 কার সবচেয়ে বেশি বাকি?</button>
+            <button class="suggestion-btn" data-question="মিলের হিসাব বলো।">📋 মিলের হিসাব বলো।</button>
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="এখানে প্রশ্ন লিখুন...">
