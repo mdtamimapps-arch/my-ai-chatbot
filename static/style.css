@@ -1,122 +1,34 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* ... আগের সব স্টাইল থাকবে ... */
 
-body {
-    background: #f0f2f5;
+/* সাজেশন বাটনের স্টাইল */
+.suggestions {
     display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 15px;
+    background: #f1f3f5;
+    border-top: 1px solid #e0e0e0;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
-.chat-container {
-    width: 450px;
-    max-width: 95%;
+.suggestion-btn {
     background: white;
+    border: 1px solid #d0d7de;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 600px;
-}
-
-.chat-header {
-    background: #1a73e8;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.chat-header h2 {
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-.chat-header p {
+    padding: 6px 14px;
     font-size: 13px;
-    opacity: 0.9;
-}
-
-.chat-box {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    background: #f8f9fa;
-}
-
-.message {
-    margin-bottom: 15px;
-    padding: 12px 16px;
-    border-radius: 18px;
-    max-width: 85%;
-    word-wrap: break-word;
-    line-height: 1.5;
-}
-
-.bot-message {
-    background: white;
-    color: #222;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.user-message {
-    background: #1a73e8;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-    margin-left: auto;
-}
-
-.input-area {
-    display: flex;
-    padding: 15px;
-    background: white;
-    border-top: 1px solid #e9ecef;
-    gap: 10px;
-}
-
-#user-input {
-    flex: 1;
-    padding: 12px 18px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    outline: none;
-    font-size: 14px;
-}
-
-#user-input:focus {
-    border-color: #1a73e8;
-}
-
-#send-btn {
-    background: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 12px 24px;
+    color: #1a73e8;
     cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
+    transition: 0.2s;
+    font-weight: 500;
 }
 
-#send-btn:hover {
-    background: #1557b0;
+.suggestion-btn:hover {
+    background: #e8f0fe;
+    border-color: #1a73e8;
+    transform: scale(1.02);
 }
 
-#send-btn:disabled {
-    background: #aaa;
-    cursor: not-allowed;
-}
-
-.typing-indicator {
-    color: #666;
-    font-style: italic;
-    padding: 8px 0;
+.suggestion-btn:active {
+    background: #d2e3fc;
 }
